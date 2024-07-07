@@ -1,0 +1,62 @@
+Steps to Run the Project
+Start Minikube:
+
+minikube start
+
+Install Helm (if not installed):
+
+# For macOS:
+brew install helm
+# For Linux:
+curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+Add Prometheus and Grafana Helm Repositories:
+
+
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+Create a Namespace for Monitoring:
+
+
+kubectl create namespace monitoring
+Deploy FastAPI Application:
+
+Ensure your FastAPI application is configured to run in a Kubernetes cluster. Use appropriate Kubernetes YAML files (deployment.yaml, service.yaml).
+Apply the YAML files to deploy FastAPI:
+
+kubectl apply -f path/to/deployment.yaml -n monitoring
+kubectl apply -f path/to/service.yaml -n monitoring
+Configure and Install Prometheus:
+
+Create a prometheus.yml file with appropriate scrape configurations for FastAPI.
+Install Prometheus using Helm:
+
+helm install prometheus prometheus-community/prometheus -f path/to/prometheus_data/values.yaml -n monitoring
+Configure and Install Grafana:
+
+Create a values.yaml file for Grafana with any custom configurations.
+Install Grafana using Helm:
+
+helm install grafana grafana/grafana -f path/to/values.yaml -n monitoring
+Accessing Services:
+
+Prometheus: Access Prometheus dashboard using port forwarding:
+
+
+kubectl port-forward svc/prometheus-server 9090:80 -n monitoring
+Open http://localhost:9090 in your browser.
+
+Grafana: Access Grafana dashboard using port forwarding:
+
+
+kubectl port-forward svc/grafana 3000:80 -n monitoring
+Open http://localhost:3000 in your browser. Use admin as username and retrieve the password from the Kubernetes secret.
+
+Testing FastAPI Endpoints:
+
+Use curl or tools like Postman to test your FastAPI endpoints.
+Verify the expected output and functionality as per your application's requirements.
+Visualizing Metrics in Grafana:
+
+Configure Prometheus as a data source in Grafana.
+Create dashboards to visualize metrics collected from FastAPI.
